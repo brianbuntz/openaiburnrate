@@ -96,8 +96,14 @@
         .bar-row {
             display: grid;
             grid-template-columns: 140px 1fr 100px;
-            align-items: center;
+            align-items: start;
             gap: 20px;
+        }
+
+        .amount-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
         }
 
         .company-name {
@@ -148,12 +154,12 @@
 
         .bar-tesla {
             background: linear-gradient(90deg, var(--tesla) 0%, #990000 100%);
-            width: 9.5%;
+            width: 8.7%;
         }
 
         .bar-amazon {
             background: linear-gradient(90deg, var(--amazon) 0%, #cc7a00 100%);
-            width: 0.7%;
+            width: 2.6%;
             min-width: 8px;
         }
 
@@ -178,6 +184,13 @@
         .amount-highlight {
             color: var(--openai);
             font-size: 1.3rem;
+        }
+
+        .metric-label {
+            font-size: 0.65rem;
+            color: var(--muted);
+            text-align: right;
+            margin-top: -5px;
         }
 
         .context-row {
@@ -305,11 +318,11 @@
     <div class="container">
         <header>
             <h1>The Burn Rate <span>Hall of Fame</span></h1>
-            <p class="subtitle">Cumulative losses through path to profitability (or projected)</p>
+            <p class="subtitle">Cumulative losses or cash burn (see notes)</p>
         </header>
 
         <div class="chart-section">
-            <div class="section-label">Cumulative Losses</div>
+            <div class="section-label">Cumulative Losses or Cash Burn (see notes)</div>
             
             <div class="bar-chart">
                 <div class="bar-row">
@@ -319,7 +332,10 @@
                             <span class="bar-value"></span>
                         </div>
                     </div>
-                    <div class="amount amount-highlight">$115B</div>
+                    <div class="amount-wrapper">
+                        <div class="amount amount-highlight">$115B</div>
+                        <div class="metric-label">(cash burn)</div>
+                    </div>
                 </div>
 
                 <div class="bar-row">
@@ -359,7 +375,10 @@
                             <span class="bar-value"></span>
                         </div>
                     </div>
-                    <div class="amount">$10.9B</div>
+                    <div class="amount-wrapper">
+                        <div class="amount">~$10B</div>
+                        <div class="metric-label">(approximate)</div>
+                    </div>
                 </div>
 
                 <div class="bar-row">
@@ -369,29 +388,29 @@
                             <span class="bar-value"></span>
                         </div>
                     </div>
-                    <div class="amount">$0.8B</div>
+                    <div class="amount">$3B</div>
                 </div>
             </div>
         </div>
 
         <div class="chart-section">
-            <div class="section-label">Years to Profitability</div>
+            <div class="section-label">Years to First Annual Profit (GAAP Net Income)</div>
             
             <div class="years-to-profit">
                 <div class="profit-item openai-item">
                     <div class="profit-company">OpenAI</div>
-                    <div class="profit-years">15+</div>
-                    <div class="profit-label">years (projected)</div>
-                </div>
-                <div class="profit-item">
-                    <div class="profit-company">Uber</div>
-                    <div class="profit-years">14</div>
-                    <div class="profit-label">years (2023)</div>
+                    <div class="profit-years">14+</div>
+                    <div class="profit-label">years (no earlier than 2029)</div>
                 </div>
                 <div class="profit-item">
                     <div class="profit-company">Tesla</div>
                     <div class="profit-years">17</div>
                     <div class="profit-label">years (2020)</div>
+                </div>
+                <div class="profit-item">
+                    <div class="profit-company">Uber</div>
+                    <div class="profit-years">14</div>
+                    <div class="profit-label">years (2023)</div>
                 </div>
                 <div class="profit-item">
                     <div class="profit-company">Amazon</div>
@@ -401,7 +420,7 @@
                 <div class="profit-item">
                     <div class="profit-company">WeWork</div>
                     <div class="profit-years">—</div>
-                    <div class="profit-label">bankrupt 2023</div>
+                    <div class="profit-label">bankrupt Nov 2023</div>
                 </div>
             </div>
         </div>
@@ -409,25 +428,20 @@
         <div class="context-row">
             <div class="context-grid">
                 <div class="context-item">
-                    <div class="context-label">OpenAI 2026 Loss</div>
+                    <div class="context-label">OpenAI 2026 Projected Loss</div>
                     <div class="context-value">$14B</div>
-                    <div class="context-note">≈ Manhattan Project total cost</div>
+                    <div class="context-note">About half the Manhattan Project's cost in constant 1996 dollars (about $20B, Brookings)</div>
                 </div>
                 <div class="context-item">
-                    <div class="context-label">Peak Burn Multiple</div>
-                    <div class="context-value">3.6×</div>
-                    <div class="context-note">vs. Uber's worst year ($4.5B)</div>
-                </div>
-                <div class="context-item">
-                    <div class="context-label">Required Funding</div>
+                    <div class="context-label">Funding Sought</div>
                     <div class="context-value">$100B</div>
-                    <div class="context-note">Largest private raise ever</div>
+                    <div class="context-note">Among the largest private raises ever attempted (WSJ, Dec 2025)</div>
                 </div>
             </div>
         </div>
 
         <div class="footnote">
-            Sources: OpenAI projections via The Information; Uber/WeWork/Rivian/Lyft cumulative losses via SEC filings and American Affairs Journal (2024); Tesla via Fortune; Amazon via Bloomberg. WeWork losses through bankruptcy filing (2023). Tesla cumulative negative FCF through 2019. Amazon cumulative losses 1994–2002.
+            <strong>Sources:</strong> OpenAI $115B cumulative cash burn through 2029 and $14B projected 2026 loss per The Information (Oct 2024) via Reuters. OpenAI $100B funding round per Wall Street Journal (Dec 2025). Uber/WeWork/Rivian cumulative net losses per SEC filings, summarized in American Affairs Journal (2024); these represent total GAAP net losses since inception. Tesla figure from same American Affairs compilation (approximate; exact total varies by calculation method). Amazon accumulated deficit of about $3B at profitability per SEC filings and American Affairs. Manhattan Project cost about $1.9B then-year dollars, about $20B in constant 1996 dollars (Brookings Institution, "The Costs of the Manhattan Project").
         </div>
     </div>
 </body>
