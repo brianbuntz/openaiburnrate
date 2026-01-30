@@ -4,19 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Burn Rate Hall of Fame</title>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #0a0a0a;
-            --text: #f5f5f0;
-            --accent: #ff3d00;
-            --muted: #666;
+            --bg: #0c0c0c;
+            --surface: #141414;
+            --border: #2a2a2a;
+            --text: #e8e8e3;
+            --text-muted: #6b6b6b;
+            --text-dim: #4a4a4a;
+            --accent: #ff4d1a;
             --openai: #10a37f;
-            --uber: #000;
-            --wework: #ffcc00;
-            --rivian: #5ce1e6;
+            --uber: #555;
+            --wework: #e6b800;
+            --rivian: #00c4cc;
+            --tesla: #c41e3a;
             --amazon: #ff9900;
-            --tesla: #cc0000;
         }
 
         * {
@@ -28,421 +31,564 @@
         body {
             background: var(--bg);
             color: var(--text);
-            font-family: 'Space Mono', monospace;
+            font-family: 'JetBrains Mono', monospace;
             min-height: 100vh;
-            padding: 40px 20px;
-            line-height: 1.4;
+            padding: 48px 24px;
+            line-height: 1.5;
         }
 
         .container {
-            max-width: 900px;
+            max-width: 920px;
             margin: 0 auto;
         }
 
+        /* Header */
         header {
-            margin-bottom: 50px;
-            border-bottom: 1px solid #333;
-            padding-bottom: 30px;
+            margin-bottom: 56px;
+            padding-bottom: 32px;
+            border-bottom: 1px solid var(--border);
         }
 
         h1 {
-            font-family: 'Instrument Serif', serif;
-            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.2rem, 5.5vw, 3.5rem);
             font-weight: 400;
-            line-height: 1.1;
-            margin-bottom: 15px;
+            line-height: 1.15;
+            margin-bottom: 12px;
+            letter-spacing: -0.02em;
         }
 
-        h1 span {
+        h1 .highlight {
             color: var(--accent);
             font-style: italic;
         }
 
         .subtitle {
-            font-size: 0.85rem;
-            color: var(--muted);
+            font-size: 0.72rem;
+            color: var(--text-muted);
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 2.5px;
         }
 
+        /* Section styling */
         .chart-section {
-            margin-bottom: 60px;
+            margin-bottom: 56px;
         }
 
-        .section-label {
-            font-size: 0.7rem;
+        .section-header {
+            display: flex;
+            align-items: baseline;
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .section-title {
+            font-size: 0.68rem;
             text-transform: uppercase;
             letter-spacing: 3px;
-            color: var(--muted);
-            margin-bottom: 25px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
+            color: var(--text-muted);
+            white-space: nowrap;
         }
 
-        .section-label::after {
-            content: '';
+        .section-line {
             flex: 1;
             height: 1px;
-            background: #333;
+            background: var(--border);
         }
 
+        /* Bar chart */
         .bar-chart {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 18px;
         }
 
         .bar-row {
             display: grid;
-            grid-template-columns: 140px 1fr 100px;
-            align-items: start;
-            gap: 20px;
+            grid-template-columns: 130px 1fr 110px;
+            align-items: center;
+            gap: 16px;
         }
 
-        .amount-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
+        .company-info {
+            text-align: right;
         }
 
         .company-name {
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             font-weight: 700;
-            text-align: right;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        .company-tag {
+            display: inline-block;
+            font-size: 0.55rem;
+            font-weight: 500;
+            padding: 3px 6px;
+            border-radius: 2px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .tag-projected {
+            background: var(--openai);
+            color: var(--bg);
+        }
+
+        .company-note {
+            font-size: 0.62rem;
+            color: var(--text-dim);
+            margin-top: 2px;
         }
 
         .bar-container {
             position: relative;
-            height: 45px;
-            background: #1a1a1a;
-            border-radius: 2px;
+            height: 40px;
+            background: var(--surface);
+            border-radius: 3px;
             overflow: hidden;
+            border: 1px solid var(--border);
         }
 
         .bar {
             height: 100%;
             border-radius: 2px;
-            position: relative;
             display: flex;
             align-items: center;
             justify-content: flex-end;
-            padding-right: 15px;
-            transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+            padding-right: 12px;
+            transition: width 1.2s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
-        .bar-openai {
-            background: linear-gradient(90deg, var(--openai) 0%, #0d8c6d 100%);
-            width: 100%;
+        /* Bar colors - using width percentages based on $115B max */
+        .bar-openai { 
+            background: linear-gradient(90deg, var(--openai), #0d8a6a);
+            width: 100%; 
+        }
+        .bar-uber { 
+            background: linear-gradient(90deg, var(--uber), #3a3a3a);
+            width: 27.6%; /* $31.7B / $115B */
+        }
+        .bar-wework { 
+            background: linear-gradient(90deg, var(--wework), #cc9900);
+            width: 18%; /* $20.7B / $115B */
+        }
+        .bar-rivian { 
+            background: linear-gradient(90deg, var(--rivian), #009fa6);
+            width: 14.7%; /* ~$17B / $115B */
+        }
+        .bar-tesla { 
+            background: linear-gradient(90deg, var(--tesla), #9a1830);
+            width: 8.7%; /* ~$10B / $115B */
+        }
+        .bar-amazon { 
+            background: linear-gradient(90deg, var(--amazon), #cc7a00);
+            width: 2.6%; /* $3B / $115B */
+            min-width: 6px;
         }
 
-        .bar-uber {
-            background: linear-gradient(90deg, #333 0%, #1a1a1a 100%);
-            border: 1px solid #444;
-            width: 27.6%;
-        }
-
-        .bar-wework {
-            background: linear-gradient(90deg, var(--wework) 0%, #e6b800 100%);
-            width: 18%;
-        }
-
-        .bar-rivian {
-            background: linear-gradient(90deg, var(--rivian) 0%, #4ac4c9 100%);
-            width: 9.6%;
-        }
-
-        .bar-tesla {
-            background: linear-gradient(90deg, var(--tesla) 0%, #990000 100%);
-            width: 8.7%;
-        }
-
-        .bar-amazon {
-            background: linear-gradient(90deg, var(--amazon) 0%, #cc7a00 100%);
-            width: 2.6%;
-            min-width: 8px;
-        }
-
-        .bar-value {
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: var(--bg);
-            white-space: nowrap;
-        }
-
-        .bar-uber .bar-value,
-        .bar-amazon .bar-value {
-            color: var(--text);
+        .amount-col {
+            text-align: right;
         }
 
         .amount {
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             font-weight: 700;
-            text-align: right;
         }
 
-        .amount-highlight {
+        .amount-openai {
             color: var(--openai);
-            font-size: 1.3rem;
+            font-size: 1.2rem;
         }
 
-        .metric-label {
-            font-size: 0.65rem;
-            color: var(--muted);
-            text-align: right;
-            margin-top: -5px;
+        .amount-label {
+            font-size: 0.58rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .context-row {
-            margin-top: 40px;
-            padding-top: 30px;
-            border-top: 1px solid #222;
+        /* Years to profit section */
+        .profit-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .profit-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 20px 16px;
+            text-align: center;
+        }
+
+        .profit-card.featured {
+            border-color: var(--openai);
+            background: rgba(16, 163, 127, 0.08);
+        }
+
+        .profit-company {
+            font-size: 0.72rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .profit-years {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.4rem;
+            font-weight: 400;
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+
+        .profit-card.featured .profit-years {
+            color: var(--openai);
+        }
+
+        .profit-detail {
+            font-size: 0.6rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Context boxes */
+        .context-section {
+            margin-top: 48px;
+            padding-top: 32px;
+            border-top: 1px solid var(--border);
         }
 
         .context-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
         }
 
-        .context-item {
-            padding: 20px;
-            background: #111;
+        .context-box {
+            background: var(--surface);
             border-left: 3px solid var(--accent);
+            padding: 20px;
         }
 
         .context-label {
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             text-transform: uppercase;
             letter-spacing: 2px;
-            color: var(--muted);
-            margin-bottom: 8px;
+            color: var(--text-dim);
+            margin-bottom: 10px;
         }
 
         .context-value {
-            font-family: 'Instrument Serif', serif;
-            font-size: 2rem;
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
             font-weight: 400;
-        }
-
-        .context-note {
-            font-size: 0.75rem;
-            color: var(--muted);
-            margin-top: 5px;
-        }
-
-        .footnote {
-            margin-top: 50px;
-            padding-top: 20px;
-            border-top: 1px solid #222;
-            font-size: 0.7rem;
-            color: var(--muted);
-            line-height: 1.6;
-        }
-
-        .footnote a {
-            color: var(--muted);
-        }
-
-        .openai-tag {
-            display: inline-block;
-            background: var(--openai);
-            color: var(--bg);
-            font-size: 0.6rem;
-            padding: 3px 8px;
-            border-radius: 2px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-left: 10px;
-            vertical-align: middle;
-        }
-
-        .years-to-profit {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-top: 40px;
-        }
-
-        .profit-item {
-            text-align: center;
-            padding: 20px 15px;
-            background: #111;
-            border-radius: 3px;
-        }
-
-        .profit-company {
-            font-size: 0.75rem;
-            font-weight: 700;
             margin-bottom: 8px;
         }
 
-        .profit-years {
-            font-family: 'Instrument Serif', serif;
-            font-size: 2.2rem;
+        .context-note {
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            line-height: 1.5;
         }
 
-        .profit-label {
+        /* Methodology note */
+        .methodology {
+            margin-top: 48px;
+            padding: 20px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+        }
+
+        .methodology-title {
             font-size: 0.65rem;
-            color: var(--muted);
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
         }
 
-        .profit-item.openai-item {
-            border: 1px solid var(--openai);
-            background: rgba(16, 163, 127, 0.1);
+        .methodology-text {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            line-height: 1.7;
         }
 
-        .profit-item.openai-item .profit-years {
-            color: var(--openai);
+        .methodology-text strong {
+            color: var(--text);
+            font-weight: 500;
         }
 
-        @media (max-width: 600px) {
+        /* Footnotes */
+        .footnotes {
+            margin-top: 40px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+        }
+
+        .footnote-title {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-dim);
+            margin-bottom: 12px;
+        }
+
+        .footnote-text {
+            font-size: 0.65rem;
+            color: var(--text-dim);
+            line-height: 1.8;
+        }
+
+        .footnote-text a {
+            color: var(--text-muted);
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            body {
+                padding: 32px 16px;
+            }
+
             .bar-row {
-                grid-template-columns: 100px 1fr 70px;
+                grid-template-columns: 95px 1fr 75px;
                 gap: 10px;
             }
-            
+
             .company-name {
-                font-size: 0.7rem;
+                font-size: 0.72rem;
+                flex-direction: column;
+                align-items: flex-end;
+                gap: 4px;
             }
-            
+
             .amount {
-                font-size: 0.85rem;
+                font-size: 0.88rem;
+            }
+
+            .amount-openai {
+                font-size: 1rem;
+            }
+
+            .profit-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        
+        <!-- Header -->
         <header>
-            <h1>The Burn Rate <span>Hall of Fame</span></h1>
-            <p class="subtitle">Cumulative losses or cash burn (see notes)</p>
+            <h1>The Burn Rate <span class="highlight">Hall of Fame</span></h1>
+            <p class="subtitle">Comparing startup cash consumption at scale</p>
         </header>
 
-        <div class="chart-section">
-            <div class="section-label">Cumulative Losses or Cash Burn (see notes)</div>
-            
+        <!-- Main Chart -->
+        <section class="chart-section">
+            <div class="section-header">
+                <span class="section-title">Cumulative Cash Burn or Net Losses</span>
+                <span class="section-line"></span>
+            </div>
+
             <div class="bar-chart">
+                <!-- OpenAI -->
                 <div class="bar-row">
-                    <div class="company-name">OpenAI<span class="openai-tag">Projected 2029</span></div>
-                    <div class="bar-container">
-                        <div class="bar bar-openai">
-                            <span class="bar-value"></span>
+                    <div class="company-info">
+                        <div class="company-name">
+                            OpenAI
+                            <span class="company-tag tag-projected">2029</span>
                         </div>
+                        <div class="company-note">Cash burn projection</div>
                     </div>
-                    <div class="amount-wrapper">
-                        <div class="amount amount-highlight">$115B</div>
-                        <div class="metric-label">(cash burn)</div>
+                    <div class="bar-container">
+                        <div class="bar bar-openai"></div>
+                    </div>
+                    <div class="amount-col">
+                        <div class="amount amount-openai">$115B</div>
+                        <div class="amount-label">Cash Burn</div>
                     </div>
                 </div>
 
+                <!-- Uber -->
                 <div class="bar-row">
-                    <div class="company-name">Uber</div>
-                    <div class="bar-container">
-                        <div class="bar bar-uber">
-                            <span class="bar-value"></span>
-                        </div>
+                    <div class="company-info">
+                        <div class="company-name">Uber</div>
+                        <div class="company-note">Through 2023 profitability</div>
                     </div>
-                    <div class="amount">$31.7B</div>
+                    <div class="bar-container">
+                        <div class="bar bar-uber"></div>
+                    </div>
+                    <div class="amount-col">
+                        <div class="amount">$31.7B</div>
+                        <div class="amount-label">Net Losses</div>
+                    </div>
                 </div>
 
+                <!-- WeWork -->
                 <div class="bar-row">
-                    <div class="company-name">WeWork</div>
-                    <div class="bar-container">
-                        <div class="bar bar-wework">
-                            <span class="bar-value"></span>
-                        </div>
+                    <div class="company-info">
+                        <div class="company-name">WeWork</div>
+                        <div class="company-note">Through bankruptcy</div>
                     </div>
-                    <div class="amount">$20.7B</div>
+                    <div class="bar-container">
+                        <div class="bar bar-wework"></div>
+                    </div>
+                    <div class="amount-col">
+                        <div class="amount">$20.7B</div>
+                        <div class="amount-label">Net Losses</div>
+                    </div>
                 </div>
 
+                <!-- Rivian -->
                 <div class="bar-row">
-                    <div class="company-name">Rivian</div>
-                    <div class="bar-container">
-                        <div class="bar bar-rivian">
-                            <span class="bar-value"></span>
-                        </div>
+                    <div class="company-info">
+                        <div class="company-name">Rivian</div>
+                        <div class="company-note">Through mid-2025</div>
                     </div>
-                    <div class="amount">$11.1B</div>
+                    <div class="bar-container">
+                        <div class="bar bar-rivian"></div>
+                    </div>
+                    <div class="amount-col">
+                        <div class="amount">~$17B</div>
+                        <div class="amount-label">Net Losses</div>
+                    </div>
                 </div>
 
+                <!-- Tesla -->
                 <div class="bar-row">
-                    <div class="company-name">Tesla</div>
-                    <div class="bar-container">
-                        <div class="bar bar-tesla">
-                            <span class="bar-value"></span>
-                        </div>
+                    <div class="company-info">
+                        <div class="company-name">Tesla</div>
+                        <div class="company-note">Through 2019</div>
                     </div>
-                    <div class="amount-wrapper">
+                    <div class="bar-container">
+                        <div class="bar bar-tesla"></div>
+                    </div>
+                    <div class="amount-col">
                         <div class="amount">~$10B</div>
-                        <div class="metric-label">(approximate)</div>
+                        <div class="amount-label">Est. FCF Burn</div>
                     </div>
                 </div>
 
+                <!-- Amazon -->
                 <div class="bar-row">
-                    <div class="company-name">Amazon</div>
-                    <div class="bar-container">
-                        <div class="bar bar-amazon">
-                            <span class="bar-value"></span>
-                        </div>
+                    <div class="company-info">
+                        <div class="company-name">Amazon</div>
+                        <div class="company-note">Through 2002</div>
                     </div>
-                    <div class="amount">$3B</div>
+                    <div class="bar-container">
+                        <div class="bar bar-amazon"></div>
+                    </div>
+                    <div class="amount-col">
+                        <div class="amount">$3B</div>
+                        <div class="amount-label">Net Losses</div>
+                    </div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <div class="chart-section">
-            <div class="section-label">Years to First Annual Profit (GAAP Net Income)</div>
-            
-            <div class="years-to-profit">
-                <div class="profit-item openai-item">
+        <!-- Years to Profit -->
+        <section class="chart-section">
+            <div class="section-header">
+                <span class="section-title">Years to First Annual Profit (GAAP Net Income)</span>
+                <span class="section-line"></span>
+            </div>
+
+            <div class="profit-grid">
+                <div class="profit-card featured">
                     <div class="profit-company">OpenAI</div>
                     <div class="profit-years">14+</div>
-                    <div class="profit-label">years (no earlier than 2029)</div>
+                    <div class="profit-detail">Target: 2029 or later</div>
                 </div>
-                <div class="profit-item">
+                <div class="profit-card">
                     <div class="profit-company">Tesla</div>
                     <div class="profit-years">17</div>
-                    <div class="profit-label">years (2020)</div>
+                    <div class="profit-detail">Founded 2003 → Profit 2020</div>
                 </div>
-                <div class="profit-item">
+                <div class="profit-card">
                     <div class="profit-company">Uber</div>
                     <div class="profit-years">14</div>
-                    <div class="profit-label">years (2023)</div>
+                    <div class="profit-detail">Founded 2009 → Profit 2023</div>
                 </div>
-                <div class="profit-item">
+                <div class="profit-card">
                     <div class="profit-company">Amazon</div>
                     <div class="profit-years">9</div>
-                    <div class="profit-label">years (2003)</div>
+                    <div class="profit-detail">Founded 1994 → Profit 2003</div>
                 </div>
-                <div class="profit-item">
+                <div class="profit-card">
                     <div class="profit-company">WeWork</div>
                     <div class="profit-years">—</div>
-                    <div class="profit-label">bankrupt Nov 2023</div>
+                    <div class="profit-detail">Bankrupt Nov 2023</div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <div class="context-row">
+        <!-- Context -->
+        <section class="context-section">
             <div class="context-grid">
-                <div class="context-item">
+                <div class="context-box">
                     <div class="context-label">OpenAI 2026 Projected Loss</div>
                     <div class="context-value">$14B</div>
-                    <div class="context-note">About half the Manhattan Project's cost in constant 1996 dollars (about $20B, Brookings)</div>
+                    <div class="context-note">
+                        Nearly 3× the company's expected 2025 loss. 
+                        For comparison: the Manhattan Project cost ~$30B in 2025 dollars.
+                    </div>
                 </div>
-                <div class="context-item">
-                    <div class="context-label">Funding Sought</div>
+                <div class="context-box">
+                    <div class="context-label">Funding Being Sought</div>
                     <div class="context-value">$100B</div>
-                    <div class="context-note">Among the largest private raises ever attempted (WSJ, Dec 2025)</div>
+                    <div class="context-note">
+                        Would be among the largest private capital raises ever attempted, 
+                        at a potential $830B valuation.
+                    </div>
                 </div>
+            </div>
+        </section>
+
+        <!-- Methodology -->
+        <div class="methodology">
+            <div class="methodology-title">Methodology Note</div>
+            <div class="methodology-text">
+                This chart compares different financial metrics across companies. 
+                <strong>OpenAI's figure is projected cash burn</strong> (negative free cash flow through 2029). 
+                <strong>Uber, WeWork, Rivian, and Amazon figures are cumulative GAAP net losses</strong> through their respective profitability milestones or bankruptcy. 
+                <strong>Tesla's figure is estimated cumulative negative FCF</strong> through 2019. 
+                These metrics are not perfectly comparable but illustrate relative scale of capital consumption.
             </div>
         </div>
 
-        <div class="footnote">
-            <strong>Sources:</strong> OpenAI $115B cumulative cash burn through 2029 and $14B projected 2026 loss per The Information (Oct 2024) via Reuters. OpenAI $100B funding round per Wall Street Journal (Dec 2025). Uber/WeWork/Rivian cumulative net losses per SEC filings, summarized in American Affairs Journal (2024); these represent total GAAP net losses since inception. Tesla figure from same American Affairs compilation (approximate; exact total varies by calculation method). Amazon accumulated deficit of about $3B at profitability per SEC filings and American Affairs. Manhattan Project cost about $1.9B then-year dollars, about $20B in constant 1996 dollars (Brookings Institution, "The Costs of the Manhattan Project").
+        <!-- Sources -->
+        <div class="footnotes">
+            <div class="footnote-title">Sources</div>
+            <div class="footnote-text">
+                <strong>OpenAI:</strong> $115B cumulative cash burn through 2029 per The Information (Sept 2025) via Reuters. 
+                $14B projected 2026 loss per The Information (Oct 2024). 
+                $100B funding round at $830B valuation per Wall Street Journal (Dec 2025). 
+                <br><br>
+                <strong>Uber, WeWork:</strong> Cumulative net losses per SEC filings, as summarized in American Affairs Journal (Nov 2024). 
+                <br><br>
+                <strong>Rivian:</strong> ~$17B cumulative net losses through mid-2025 per SEC filings and CMC Markets analysis. 
+                <br><br>
+                <strong>Tesla:</strong> Approximate cumulative negative FCF through 2019 per American Affairs compilation. 
+                <br><br>
+                <strong>Amazon:</strong> Peak accumulated deficit of ~$3B at profitability per SEC filings. 
+                <br><br>
+                <strong>Manhattan Project:</strong> ~$2B nominal ($20B in 1996 dollars, ~$30B in 2025 dollars) per Brookings Institution.
+            </div>
         </div>
+
     </div>
 </body>
 </html>
